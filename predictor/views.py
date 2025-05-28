@@ -17,14 +17,15 @@ def home(request):
         if 'single_submit' in request.POST:
             single_form = BreastCancerForm(request.POST)
             if single_form.is_valid():
-                features = [
+                features = np.array([
                     single_form.cleaned_data['mean_radius'],
                     single_form.cleaned_data['mean_texture'],
                     single_form.cleaned_data['mean_perimeter'],
                     single_form.cleaned_data['mean_area'],
-                    single_form.cleaned_data['mean_smoothness'],
+                    single_form.cleaned_data['mean_smoothness']
                     # Agrega más características según corresponda
-                ]
+                ]).reshape(1, -1)  # Reformar a (1, 5)
+                proba = model.predict_proba(features)[0]
 
                 # Hacer predicción
                 proba = model.predict_proba([features])[0]
