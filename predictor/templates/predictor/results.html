@@ -1,0 +1,62 @@
+{% extends 'predictor/base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Resultados de Predicción</h1>
+
+{% if result.type == 'single' %}
+<div class="card">
+    <div class="card-header">
+        <h3>Resultado Individual</h3>
+    </div>
+    <div class="card-body">
+        <h4>Probabilidades:</h4>
+        <div class="progress mb-3">
+            <div class="progress-bar bg-danger" style="width: {{ result.malignant_prob }}%">
+                Maligno: {{ result.malignant_prob|floatformat:2 }}%
+            </div>
+            <div class="progress-bar bg-success" style="width: {{ result.benign_prob }}%">
+                Benigno: {{ result.benign_prob|floatformat:2 }}%
+            </div>
+        </div>
+        
+        <h4>Características ingresadas:</h4>
+        <ul>
+            {% for key, value in result.features.items %}
+            <li><strong>{{ key }}:</strong> {{ value }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% else %}
+<div class="card">
+    <div class="card-header">
+        <h3>Resultados Múltiples</h3>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Prob. Maligno</th>
+                    <th>Prob. Benigno</th>
+                    <th>Características</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for case in result.cases %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ case.malignant_prob|floatformat:2 }}%</td>
+                    <td>{{ case.benign_prob|floatformat:2 }}%</td>
+                    <td>{{ case.features }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<a href="{% url 'home' %}" class="btn btn-secondary mt-3">Volver</a>
+{% endblock %}

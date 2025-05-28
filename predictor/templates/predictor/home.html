@@ -1,0 +1,37 @@
+{% extends 'predictor/base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Predicción de Cáncer de Seno</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Ingreso Individual</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ single_form.as_p }}
+                    <button type="submit" name="single_submit" class="btn btn-primary">Predecir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>Ingreso Múltiple</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ multiple_form.as_p }}
+                    <button type="submit" name="multiple_submit" class="btn btn-primary">Predecir Múltiples Casos</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
