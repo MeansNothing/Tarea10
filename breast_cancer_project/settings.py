@@ -128,18 +128,27 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Configuración para Render
+# Al final del settings.py, modifica el bloque para Render:
+
 if 'RENDER' in os.environ:
-    # Configuración para producción
+    # Configuración para Render
     ALLOWED_HOSTS = ['*']
     MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
-    # Configuración de la base de datos
-    import dj_database_url
+    try:
+        import dj_database_url
 
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=os.getenv('DATABASE_URL'),
-            conn_max_age=600
-        )
-    }
+        DATABASES = {
+            'default': dj_database_url.config(
+                default=os.getenv('DATABASE_URL'),
+                conn_max_age=600
+            )
+        }
+    except ImportError:
+        # Si no está dj-database-url, usa SQLite como fallback
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            }
+        }
